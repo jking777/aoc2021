@@ -23,5 +23,8 @@ class Day1 {
         }
 
         println("Part 2 number of depth increases: $numIncreases")
+
+        val streamedNumIncreases = result.windowed(size=2).map { if (it[1] > it[0]) 1 else 0 }.sum()
+        println("Part 1 streamed number of depth increases: $streamedNumIncreases")
     }
 }
