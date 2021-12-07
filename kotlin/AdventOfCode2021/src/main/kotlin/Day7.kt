@@ -5,6 +5,8 @@ class Day7 {
 //        parseInput("..\\..\\data\\day7_sample.txt")
         parseInput("..\\..\\data\\day7.txt")
 
+        var startMillis = System.nanoTime()
+
         var fuel = Long.MAX_VALUE
         var fuelPos = -1
 
@@ -18,7 +20,12 @@ class Day7 {
             }
         }
 
+        val elapsed1 = System.nanoTime() - startMillis
         println("Day 7 Part 1  Position $fuelPos  Fuel $fuel")
+        println("Day 7 Part 1    Time:  $elapsed1 ns")
+        println()
+
+        startMillis = System.nanoTime()
 
         fuel = Long.MAX_VALUE
         fuelPos = -1
@@ -31,7 +38,10 @@ class Day7 {
             }
         }
 
+        val elapsed2 = System.nanoTime() - startMillis
         println("Day 7 Part 2  Position $fuelPos  Fuel $fuel")
+        println("Day 7 Part 2    Time:  $elapsed2 ns")
+        println()
     }
 
     private fun calculatePart1Fuel(finalPos: Int): Long {
