@@ -47,7 +47,6 @@ class Day10 {
 
         for (line in incompleteLines) {
             val stack: Deque<Char> = ArrayDeque()
-            var isCorrupt = false
             for (c in line) {
                 if (c in openChars) {
                     stack.addLast(c)
