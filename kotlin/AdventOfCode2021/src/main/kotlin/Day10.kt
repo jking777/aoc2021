@@ -71,15 +71,7 @@ class Day10 {
 
         val completionCharScores = mapOf(')' to 1, ']' to 2, '}' to 3, '>' to 4)
 
-        val completionLineScores: MutableList<Long> = ArrayList()
-
-        for (line in completionLines) {
-            var score: Long = 0
-            for (c in line) {
-                score = score * 5 + completionCharScores[c]!!
-            }
-            completionLineScores.add(score)
-        }
+        val completionLineScores = completionLines.map { it.fold(0L) { acc, c -> acc * 5 + completionCharScores[c]!! } }
 
         val middleScore = completionLineScores.sorted()[completionLineScores.size / 2]
 
