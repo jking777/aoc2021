@@ -1,4 +1,6 @@
 fun main(args: Array<String>) {
+    val startTime = System.currentTimeMillis()
+
 //    Day1().run()
 //    Day3().run()
 //    Day4().run()
@@ -9,5 +11,10 @@ fun main(args: Array<String>) {
 //    Day9().run()
 //    Day10().run()
 //    Day11().run()
-    Day12().run()
+//    Day12().run()
+    Day13().run()
+
+    val elapsed = System.currentTimeMillis() - startTime
+    println()
+    println("Total time:  $elapsed ms")
 }
