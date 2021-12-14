@@ -7,8 +7,8 @@ class Day14 {
         val result1 = doIt(10)
         println("Day 14 Part 1    most - least:  $result1")
 
-        val result2 = doIt(40)
-        println("Day 14 Part 2    most - least:  $result1")
+        val result2 = doIt(20)
+        println("Day 14 Part 2    most - least:  $result2")
     }
 
     private fun doIt(count: Int): Int {
@@ -29,17 +29,17 @@ class Day14 {
         return mostCommon - leastCommon
     }
 
-    private fun applySubs(template: String): String {
+    private fun applySubs(template: List<Char>): List<Char> {
         var polymer: MutableList<Char> = ArrayList()
         polymer.add(template.first())
-        for (i in 0 until template.length - 1) {
-            val pair = template.substring(i, i + 2)
+        for (i in 0 until template.size - 1) {
+            val pair = Pair(template[i], template[i + 1])
             val sub = substitutions[pair]!!
-            polymer.add(sub.first())
-            polymer.add(pair[1])
+            polymer.add(sub)
+            polymer.add(pair.second)
         }
 
-        return polymer.joinToString("")
+        return polymer
     }
 
     private fun parseInput(sample: Int) {
@@ -47,11 +47,11 @@ class Day14 {
 
         val lines = File(filename).readLines()
 
-        startingTemplate = lines[0]
+        startingTemplate = lines[0].toList()
 
-        substitutions = lines.drop(2).map { it.split(" -> ") }.associate { it[0] to it[1] }
+        substitutions = lines.drop(2).map { it.split(" -> ") }.associate { it[0].let { s -> Pair(s[0], s[1]) } to it[1][0] }
     }
 
-    private var startingTemplate: String = ""
-    private var substitutions: Map<String, String> = HashMap()
+    private var startingTemplate: List<Char> = ArrayList()
+    private var substitutions: Map<Pair<Char, Char>, Char> = HashMap()
 }
