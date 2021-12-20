@@ -6,6 +6,57 @@ class Day15 {
     fun run() {
         parseInput(0)
 
+        val part1Risk = riskOfShortestPath(originalCavern)
+
+        println("Day 15 Part 1    Total risk on shortest path:  $part1Risk")
+
+        val bigCavern = make5XCavern()
+
+        val part2Risk = riskOfShortestPath(bigCavern)
+
+        println("Day 15 Part 2    Total risk on shortest path:  $part2Risk")
+    }
+
+    private fun make5XCavern(): List<IntArray> {
+        val bigCavern: MutableList<IntArray> = ArrayList()
+
+        // do the first N rows (N is size of original list)
+        for (r in originalCavern.indices) {
+            val rowSize = originalCavern[r].size
+            val a: IntArray = IntArray(rowSize * 5)
+            for (c in originalCavern[r].indices) {
+                a[c] = originalCavern[r][c]
+            }
+            for (base in 1..4) {
+                val startIndex = base * rowSize
+                for (c in startIndex until startIndex + rowSize) {
+                    a[c] = max(1, (a[c - rowSize] + 1) % 10)
+                }
+            }
+            bigCavern.add(a)
+        }
+
+        // do remaining rows
+        for (r in originalCavern.size until originalCavern.size * 5) {
+            val sourceRow = r - originalCavern.size
+            val a: IntArray = IntArray(bigCavern[sourceRow].size)
+            for (c in a.indices) {
+                a[c] = max(1, (bigCavern[sourceRow][c] + 1) % 10)
+            }
+            bigCavern.add(a)
+        }
+
+        return bigCavern
+    }
+
+    private fun riskOfShortestPath(cavern: List<IntArray>): Long {
+        val vertexKeys: MutableSet<Pair<Int, Int>> = HashSet()
+        for (row in cavern.indices) {
+            for (col in cavern[row].indices) {
+                vertexKeys.add(Pair(row, col))
+            }
+        }
+
         val q: MutableSet<Pair<Int, Int>> = HashSet()
         val dist: MutableMap<Pair<Int, Int>, Long> = HashMap()
         val prev: MutableMap<Pair<Int, Int>, Pair<Int, Int>?> = HashMap()
@@ -20,8 +71,13 @@ class Day15 {
         val target = Pair(cavern.size - 1, cavern.last().size - 1)
 
         while (q.isNotEmpty()) {
-            val minDist = q.minOf { dist[it]!! }
-            val u = q.first { dist[it]!! == minDist }
+            if (q.size % 100 == 0) {
+                println("q size:  ${q.size}")
+            }
+
+//            val minDist = q.minOf { dist[it]!! }
+//            val u = q.first { dist[it]!! == minDist }
+            val u = q.minByOrNull { dist[it]!! }!!
 
             q.remove(u)
 
@@ -29,7 +85,7 @@ class Day15 {
                 break
             }
 
-            val neighborKeys = neighborsOf(u)
+            val neighborKeys = neighborsOf(cavern, u)
             for (v in neighborKeys) {
                 if (q.contains(v)) {
                     val alt = dist[u]!! + cavern[v.first][v.second]
@@ -41,7 +97,7 @@ class Day15 {
             }
         }
 
-        var totalRisk = 0
+        var totalRisk = 0L
         var v = Pair(cavern.size - 1, cavern.last().size - 1)
         val source = Pair(0 , 0)
         while (v != source) {
@@ -50,10 +106,10 @@ class Day15 {
             v = prev[v]!!
         }
 
-        println("Day 15 Part 1    Total risk on shortest path:  $totalRisk")
+        return totalRisk
     }
 
-    private fun neighborsOf(v: Pair<Int, Int>): Set<Pair<Int, Int>> {
+    private fun neighborsOf(cavern: List<IntArray>, v: Pair<Int, Int>): Set<Pair<Int, Int>> {
         val neighbors: MutableSet<Pair<Int, Int>> = HashSet()
         if (v.first > 0) {
             neighbors.add(Pair(v.first - 1, v.second))
@@ -88,17 +144,8 @@ class Day15 {
     private fun parseInput(sample: Int) {
         val filename = if (sample == 0) "..\\..\\data\\day15.txt" else "..\\..\\data\\day15_sample$sample.txt"
 
-        cavern = File(filename).readLines().map { line -> line.map { c -> c.digitToInt() }.toIntArray() }
-
-        vertexKeys.clear()
-        for (row in cavern.indices) {
-            for (col in cavern[row].indices) {
-                vertexKeys.add(Pair(row, col))
-            }
-        }
+        originalCavern = File(filename).readLines().map { line -> line.map { c -> c.digitToInt() }.toIntArray() }
     }
 
-    private var cavern: List<IntArray> = ArrayList()
-
-    private val vertexKeys: MutableSet<Pair<Int, Int>> = HashSet()
+    private var originalCavern: List<IntArray> = ArrayList()
 }
