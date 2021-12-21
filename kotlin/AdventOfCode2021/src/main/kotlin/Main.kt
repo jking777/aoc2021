@@ -14,7 +14,8 @@ fun main(args: Array<String>) {
 //    Day12().run()
 //    Day13().run()
 //    Day14().run()
-    Day15().run()
+//    Day15().run()
+    Day16().run()
 
     val elapsed = System.currentTimeMillis() - startTime
     println()
